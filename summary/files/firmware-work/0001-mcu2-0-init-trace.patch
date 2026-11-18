@@ -1,0 +1,137 @@
+--- a/vision_apps/platform/j721e/rtos/common/app_init.c
++++ b/vision_apps/platform/j721e/rtos/common/app_init.c
+@@ -66,6 +66,17 @@
+ #include <app.h>
+ #include <stdio.h>
+ #include <string.h>
++
++/* Short literal-only trace records avoid relying on shared appLog initialization. */
++#if defined(CPU_mcu2_0)
++#include <ipc_trace.h>
++#define BBAI64_TRACE(s) ((void)Ipc_Trace_printf("BBAI64: " s "\n"))
++#define BBAI64_STATUS(s, v) ((void)Ipc_Trace_printf("BBAI64: " s " rc=%d\n", (int)(v)))
++#else
++#define BBAI64_TRACE(s) ((void)0)
++#define BBAI64_STATUS(s, v) ((void)0)
++#endif
++
+ 
+ /* Vision_apps utils header files */
+ #include <utils/mem/include/app_mem.h>
+@@ -263,7 +274,9 @@
+     #endif
+ 
+     /* Init and start GTC timer */
++    BBAI64_TRACE("before appLogGlobalTimeInit");
+     status = appLogGlobalTimeInit();
++    BBAI64_STATUS("after appLogGlobalTimeInit", status);
+     APP_ASSERT_SUCCESS(status);
+ 
+     #ifdef ENABLE_IPC
+@@ -543,7 +556,9 @@
+     #endif
+ 
+     #ifdef ENABLE_SCICLIENT
++    BBAI64_TRACE("before appSciclientInit");
+     status = appSciclientInit(ipc_init_prm.self_cpu_id);
++    BBAI64_STATUS("after appSciclientInit", status);
+     APP_ASSERT_SUCCESS(status);
+     #endif
+ 
+@@ -557,21 +572,29 @@
+         udma_init_prm.virtToPhyFxn = appUdmaVirtToPhyAddrConversion;
+         #endif
+ 
+-        status = appUdmaInit(&udma_init_prm);
++        BBAI64_TRACE("before appUdmaInit");
++    status = appUdmaInit(&udma_init_prm);
++    BBAI64_STATUS("after appUdmaInit", status);
+         APP_ASSERT_SUCCESS(status);
+     }
+     #endif
+ 
++    BBAI64_TRACE("before appMemInit");
+     status = appMemInit(&mem_init_prm);
++    BBAI64_STATUS("after appMemInit", status);
+     APP_ASSERT_SUCCESS(status);
+ 
+     #ifdef ENABLE_ETHFW
++    BBAI64_TRACE("before appEthFwInit");
+     status = appEthFwInit();
++    BBAI64_STATUS("after appEthFwInit", status);
+     APP_ASSERT_SUCCESS(status);
+     #endif
+     
+     #ifdef ENABLE_IPC
++    BBAI64_TRACE("before appIpcInit");
+     status = appIpcInit(&ipc_init_prm);
++    BBAI64_STATUS("after appIpcInit", status);
+     APP_ASSERT_SUCCESS(status);
+     {
+         uint32_t sync_cpu_id_list[APP_LOG_MAX_CPUS];
+@@ -608,14 +631,18 @@
+             }
+         }
+         appLogPrintf("APP: Syncing with %d CPUs ... !!!\n", num_sync_cpus);
++        BBAI64_TRACE("before cpu_sync");
+         appLogCpuSyncInit(master_cpu_id, self_cpu_id, sync_cpu_id_list, num_sync_cpus);
++        BBAI64_TRACE("after cpu_sync");
+         appLogPrintf("APP: Syncing with %d CPUs ... Done !!!\n", num_sync_cpus);
+     }
+     {
+         app_remote_service_init_prms_t init_prms;
+ 
+         appRemoteServiceInitSetDefault(&init_prms);
++        BBAI64_TRACE("before remote_service");
+         appRemoteServiceInit(&init_prms);
++        BBAI64_TRACE("after remote_service");
+         appRtosTestRegister();
+         appPerfStatsRemoteServiceInit();
+     }
+--- a/vision_apps/platform/j721e/rtos/mcu2_0/main.c
++++ b/vision_apps/platform/j721e/rtos/mcu2_0/main.c
+@@ -73,10 +73,16 @@
+ #include "app_cfg_mcu2_0.h"
+ #include <utils/perf_stats/include/app_perf_stats.h>
+ 
++extern int32_t Ipc_Trace_printf(const char *format, ...);
++
+ static void appMain(void* arg0, void* arg1)
+ {
++    Ipc_Trace_printf("BBAI64: before task_utils\n");
+     appUtilsTaskInit();
++    Ipc_Trace_printf("BBAI64: after task_utils\n");
++    Ipc_Trace_printf("BBAI64: before app_init\n");
+     appInit();
++    Ipc_Trace_printf("BBAI64: after app_init\n");
+     appRun();
+     #if 1
+     while(1)
+@@ -109,13 +115,17 @@
+     /* This is moved before the wait function as NDK comes up with BIOS
+         and looks for semaphore handle created by appEthFwEarlyInit() */
+ #ifdef ENABLE_ETHFW
++    Ipc_Trace_printf("BBAI64: before ethfw_early\n");
+     appEthFwEarlyInit();
++    Ipc_Trace_printf("BBAI64: after ethfw_early\n");
+ #endif
+ 
+     /* This is for debug purpose - see the description of function header */
+     StartupEmulatorWaitFxn();
+ 
++    Ipc_Trace_printf("BBAI64: before os_init\n");
+     OS_init();
++    Ipc_Trace_printf("BBAI64: after os_init\n");
+ 
+     appPerfStatsInit();
+ 
+@@ -129,7 +139,9 @@
+     {
+         OS_stop();
+     }
++    Ipc_Trace_printf("BBAI64: before os_start\n");
+     OS_start();
++    Ipc_Trace_printf("BBAI64: after os_start\n");
+ 
+     return 0;
+ }

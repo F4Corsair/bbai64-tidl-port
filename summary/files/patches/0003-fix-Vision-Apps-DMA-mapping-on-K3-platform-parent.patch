@@ -1,0 +1,126 @@
+From 740b58a4c8c308207821c703f3eb886d8c36fe62 Mon Sep 17 00:00:00 2001
+From: Local <local@example.invalid>
+Date: Tue, 17 Nov 2026 19:18:00 +0900
+Subject: [PATCH] fix Vision Apps DMA mapping on K3 platform parent
+
+---
+ drivers/dma-buf/heaps/carveout-heap.c | 31 ++++++++++++++++++---------
+ drivers/remoteproc/remoteproc_cdev.c  |  9 +++++++-
+ 2 files changed, 29 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/dma-buf/heaps/carveout-heap.c b/drivers/dma-buf/heaps/carveout-heap.c
+index 8d4d5db..1bad49c 100644
+--- a/drivers/dma-buf/heaps/carveout-heap.c
++++ b/drivers/dma-buf/heaps/carveout-heap.c
+@@ -39,6 +39,7 @@ struct carveout_dma_heap_buffer {
+ struct dma_heap_attachment {
+ 	struct device *dev;
+ 	struct sg_table *table;
++	bool mapped;
+ 	struct list_head list;
+ };
+ 
+@@ -99,12 +100,19 @@ static struct sg_table *dma_heap_map_dma_buf(struct dma_buf_attachment *attachme
+ 	struct carveout_dma_heap_buffer *buffer = attachment->dmabuf->priv;
+ 	struct dma_heap_attachment *a = attachment->priv;
+ 	struct sg_table *table = a->table;
+-
+ 	unsigned long attrs = buffer->cached ? 0 : DMA_ATTR_SKIP_CPU_SYNC;
++	int ret;
+ 
+-	if (!dma_map_sg_attrs(attachment->dev, table->sgl, table->nents,
+-			      direction, attrs))
+-		return ERR_PTR(-ENOMEM);
++	if (!attachment->dev->dma_mask || !*attachment->dev->dma_mask)
++		return ERR_PTR(-ENODEV);
++
++	mutex_lock(&buffer->attachments_lock);
++	ret = dma_map_sgtable(attachment->dev, table, direction, attrs);
++	if (!ret)
++		a->mapped = true;
++	mutex_unlock(&buffer->attachments_lock);
++	if (ret)
++		return ERR_PTR(ret);
+ 
+ 	return table;
+ }
+@@ -114,10 +122,13 @@ static void dma_heap_unmap_dma_buf(struct dma_buf_attachment *attachment,
+ 				   enum dma_data_direction direction)
+ {
+ 	struct carveout_dma_heap_buffer *buffer = attachment->dmabuf->priv;
++	struct dma_heap_attachment *a = attachment->priv;
+ 	unsigned long attrs = buffer->cached ? 0 : DMA_ATTR_SKIP_CPU_SYNC;
+ 
+-	dma_unmap_sg_attrs(attachment->dev, table->sgl, table->nents,
+-			   direction, attrs);
++	mutex_lock(&buffer->attachments_lock);
++	a->mapped = false;
++	dma_unmap_sgtable(attachment->dev, table, direction, attrs);
++	mutex_unlock(&buffer->attachments_lock);
+ }
+ 
+ static void dma_heap_dma_buf_release(struct dma_buf *dmabuf)
+@@ -149,8 +160,8 @@ static int dma_heap_dma_buf_begin_cpu_access(struct dma_buf *dmabuf,
+ 
+ 	mutex_lock(&buffer->attachments_lock);
+ 	list_for_each_entry(a, &buffer->attachments, list) {
+-		dma_sync_sg_for_cpu(a->dev, a->table->sgl, a->table->nents,
+-				    direction);
++		if (a->mapped)
++			dma_sync_sgtable_for_cpu(a->dev, a->table, direction);
+ 	}
+ 	mutex_unlock(&buffer->attachments_lock);
+ 
+@@ -173,8 +184,8 @@ static int dma_heap_dma_buf_end_cpu_access(struct dma_buf *dmabuf,
+ 
+ 	mutex_lock(&buffer->attachments_lock);
+ 	list_for_each_entry(a, &buffer->attachments, list) {
+-		dma_sync_sg_for_device(a->dev, a->table->sgl, a->table->nents,
+-				       direction);
++		if (a->mapped)
++			dma_sync_sgtable_for_device(a->dev, a->table, direction);
+ 	}
+ 	mutex_unlock(&buffer->attachments_lock);
+ 
+diff --git a/drivers/remoteproc/remoteproc_cdev.c b/drivers/remoteproc/remoteproc_cdev.c
+index 50cff7c..5980081 100644
+--- a/drivers/remoteproc/remoteproc_cdev.c
++++ b/drivers/remoteproc/remoteproc_cdev.c
+@@ -54,11 +54,17 @@ static long rproc_cdev_attach_buf(struct file *file, struct rproc *rproc,
+ 	struct rproc_cdev_client *client = file->private_data;
+ 	struct rproc_dma_buf_attach_data data;
+ 	struct rproc_cdev_mapping *mapping;
++	struct device *dma_dev = rproc->dev.parent;
+ 	struct scatterlist *sg;
+ 	int ret;
+ 
+ 	if (!capable(CAP_SYS_RAWIO))
+ 		return -EPERM;
++	/* The platform parent carries the DMA configuration. */
++	if (!dma_dev || !dma_dev->dma_mask || !*dma_dev->dma_mask) {
++		dev_err_ratelimited(&rproc->dev, "Vision Apps DMA parent is not configured\n");
++		return -ENODEV;
++	}
+ 	if (copy_from_user(&data, arg, sizeof(data)))
+ 		return -EFAULT;
+ 
+@@ -75,7 +81,7 @@ static long rproc_cdev_attach_buf(struct file *file, struct rproc *rproc,
+ 		ret = -EINVAL;
+ 		goto put_buf;
+ 	}
+-	mapping->attachment = dma_buf_attach(mapping->buf, &rproc->dev);
++	mapping->attachment = dma_buf_attach(mapping->buf, dma_dev);
+ 	if (IS_ERR(mapping->attachment)) {
+ 		ret = PTR_ERR(mapping->attachment);
+ 		goto put_buf;
+@@ -83,6 +89,7 @@ static long rproc_cdev_attach_buf(struct file *file, struct rproc *rproc,
+ 	mapping->table = dma_buf_map_attachment(mapping->attachment, DMA_BIDIRECTIONAL);
+ 	if (IS_ERR(mapping->table)) {
+ 		ret = PTR_ERR(mapping->table);
++		dev_err_ratelimited(dma_dev, "Vision Apps DMA map failed: %d\n", ret);
+ 		goto detach_buf;
+ 	}
+ 	sg = mapping->table->sgl;
+-- 
+2.53.0
+

@@ -1,0 +1,46 @@
+--- a/src/rpmsg_char.c
++++ b/src/rpmsg_char.c
+@@ -445,6 +445,16 @@
+ 	sprintf(fpath, "%s/src", rpath);
+ 	free(rpath);
+ 
++	if (getenv("BBAI64_RPMSG_TRACE")) {
++		char raw[64] = {0};
++		FILE *fp = fopen(fpath, "r");
++		if (fp) {
++			if (fgets(raw, sizeof(raw), fp))
++				fprintf(stderr, "RPMSG_DIAG src path=%s raw=%s", fpath, raw);
++			else fprintf(stderr, "RPMSG_DIAG src read failed path=%s errno=%d\n", fpath, errno);
++			fclose(fp);
++		} else fprintf(stderr, "RPMSG_DIAG src open failed path=%s errno=%d\n", fpath, errno);
++	}
+ 	return file_read_value(fpath);
+ }
+ 
+@@ -467,6 +477,8 @@
+ 		return -errno;
+ 	}
+ 
++	if (getenv("BBAI64_RPMSG_TRACE"))
++		fprintf(stderr, "RPMSG_DIAG opened name=%s dev=%s fd=%d\n", eptdev_name, eptdev_path, efd);
+ 	/* local end-point is assigned after the open call */
+ 	endpt = _rpmsg_char_get_local_endpt(ept);
+ 	if (endpt < 0) {
+@@ -476,6 +488,8 @@
+ 
+ 	ept->rcdev.fd = efd;
+ 	ept->rcdev.endpt = endpt;
++	if (getenv("BBAI64_RPMSG_TRACE"))
++		fprintf(stderr, "RPMSG_DIAG returned dev=%s endpt=%d\n", eptdev_path, endpt);
+ 
+ 	return 0;
+ }
+@@ -650,6 +664,8 @@
+ 	if (ret)
+ 		goto out;
+ 
++	if (getenv("BBAI64_RPMSG_TRACE"))
++		fprintf(stderr, "RPMSG_DIAG request rproc=%d name=%s local=%u remote=%u\n", id, eptdev_name, local_endpt, remote_endpt);
+ 	ret = _rpmsg_char_create_eptdev(ept, eptdev_name, local_endpt, remote_endpt);
+ 	if (ret)
+ 		goto out;

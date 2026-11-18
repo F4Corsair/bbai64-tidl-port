@@ -1,0 +1,24 @@
+--- a/drivers/rpmsg/rpmsg_char.c
++++ b/drivers/rpmsg/rpmsg_char.c
+@@ -379,8 +379,19 @@
+ 			 char *buf)
+ {
+ 	struct rpmsg_eptdev *eptdev = dev_get_drvdata(dev);
+-
+-	return sprintf(buf, "%d\n", eptdev->chinfo.src);
++	u32 src;
++
++	/* chinfo.src remains RPMSG_ADDR_ANY for dynamically allocated endpoints.
++	 * Once open has bound an endpoint, export the actual address so userspace
++	 * can pass a valid return port to remote processors. Serialize with
++	 * open/release/destroy, which update ept under the same lock.
++	 */
++	mutex_lock(&eptdev->ept_lock);
++	src = eptdev->ept ? eptdev->ept->addr : eptdev->chinfo.src;
++	mutex_unlock(&eptdev->ept_lock);
++
++	/* Preserve the pre-open ANY representation (-1) used by this ABI. */
++	return sysfs_emit(buf, "%d\n", (int)src);
+ }
+ static DEVICE_ATTR_RO(src);
+ 

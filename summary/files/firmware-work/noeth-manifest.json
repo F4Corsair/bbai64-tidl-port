@@ -1,0 +1,23 @@
+{
+  "variant": "noeth",
+  "soc": "j721e",
+  "sdk_rtos": "11.02.00.06",
+  "compiler": "TI Arm Clang 4.0.4.LTS",
+  "BUILD_ENABLE_ETHFW": "no",
+  "BUILD_MCU_BOARD_DEPENDENCIES": "yes",
+  "patches": [
+    "0001-mcu2-0-init-trace.patch",
+    "0002-r5-trace-cache-writeback.patch"
+  ],
+  "IPC_peers": [
+    "MPU1_0",
+    "MCU2_0",
+    "MCU2_1",
+    "C6x_1",
+    "C6x_2",
+    "C7x_1"
+  ],
+  "board_verified": false,
+  "kernel_build_performed": false,
+  "remote_upload_performed": false
+}

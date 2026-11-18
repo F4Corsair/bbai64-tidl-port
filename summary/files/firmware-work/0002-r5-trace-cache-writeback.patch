@@ -1,0 +1,45 @@
+--- a/vision_apps/platform/j721e/rtos/ipc_trace.c
++++ b/vision_apps/platform/j721e/rtos/ipc_trace.c
+@@ -49,6 +49,10 @@
+ 
+ #include "ipc_trace.h"
+ 
++#if defined(__ARM_ARCH_7R__)
++#include <ti/csl/arch/r5/csl_cache.h>
++#endif
++
+ char Ipc_traceBuffer[IPC_TRACE_BUFFER_MAX_SIZE]
+ __attribute__ ((section(".tracebuf")))
+ ;
+@@ -60,6 +64,9 @@
+     char buffer[IPC_TRACE_MAX_LINE_LENGTH];
+     va_list args = {0};
+     uint8_t i = 0;
++#if defined(__ARM_ARCH_7R__)
++    uint32_t traceStart = gTraceBufIndex;
++#endif
+ 
+     va_start(args, format);
+     vsprintf(buffer, format, args);
+@@ -73,5 +80,21 @@
+             gTraceBufIndex = 0;
+         }
+     }
++#if defined(__ARM_ARCH_7R__)
++    /* Direct CSL cache clean has no scheduler dependency: main() also logs here.
++     * Flush only the modified range, including both pieces on ring wrap.
++     * wait=true includes DSB before Linux reads the non-coherent trace buffer.
++     */
++    if (gTraceBufIndex > traceStart) {
++        CSL_armR5CacheWb(&Ipc_traceBuffer[traceStart],
++                        gTraceBufIndex - traceStart, true);
++    } else if (gTraceBufIndex < traceStart) {
++        CSL_armR5CacheWb(&Ipc_traceBuffer[traceStart],
++                        IPC_TRACE_BUFFER_MAX_SIZE - traceStart, true);
++        if (gTraceBufIndex != 0U) {
++            CSL_armR5CacheWb(Ipc_traceBuffer, gTraceBufIndex, true);
++        }
++    }
++#endif
+     return 0;
+ }
