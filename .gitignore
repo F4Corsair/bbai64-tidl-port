@@ -2,6 +2,7 @@
 # Includes transitive Markdown links; other linked assets remain ignored.
 *
 !/.gitignore
+!/README.md
 !/summary/
 !/summary/**
 !AGENTS.md
