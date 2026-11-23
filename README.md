@@ -14,7 +14,7 @@ Implementation notes and reproduction resources for running inference through th
 |---|---|
 | [Reproduction essentials](summary/01-reproduction-en.md) | Required steps, versions, commands, and remaining work starting from a stock system |
 | [Troubleshooting record](summary/02-troubleshooting-en.md) | Problems encountered, fixes, and links to supporting documents |
-| [TIDL porting checklist](summary/03-porting-checklist-en.md) | Compatibility and validation checks for other releases and boards |
+| [TIDL porting checklist](summary/03-porting-checklist-en.md) | Component and feature choices, porting order, driver backports, and additional checks |
 
 Required patches, configuration files, and scripts are in [summary/files](summary/files). Full SDK and Linux source trees, large build outputs, and models are excluded. The shortened procedure has not yet been rerun end to end on a freshly flashed SD card; check its prerequisites and stop conditions.
 
