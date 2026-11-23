@@ -129,4 +129,4 @@ sync
 sudo reboot
 ```
 
-SSH不可なら電源を切りSDを別PCに接続する。FATのブートパーティションを開き、extlinux/extlinux.conf.pre-tidl3をextlinux.confへ戻す。ホストの/bootを変更しない。正常にアンマウントしてSDを戻す。root が eMMC 等、調査時と異なる構成なら適用を止めて복구手順を見直す。
+SSH가 불가능하면 전원을 끄고 SD를 다른 PC에 연결한다. FAT 부트 파티션의 extlinux/extlinux.conf.pre-tidl3를 extlinux.conf로 복원한다. 호스트의 /boot를 변경하지 않는다. 정상적으로 마운트를 해제하고 SD를 되돌린다. root가 eMMC 등 조사 당시와 다르면 적용을 멈추고 복구 절차를 재검토한다.

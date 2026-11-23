@@ -1,0 +1,134 @@
+[
+  {
+    "ko": "README-ko.md",
+    "en": "README.md"
+  },
+  {
+    "ko": "bbai64-porting/docs/bringup-status-ko.md",
+    "en": "bbai64-porting/docs/bringup-status-en.md"
+  },
+  {
+    "ko": "bbai64-porting/docs/deployment-guide-ko.md",
+    "en": "bbai64-porting/docs/deployment-guide-en.md"
+  },
+  {
+    "ko": "bbai64-porting/docs/ethfw-role-and-disable-ko.md",
+    "en": "bbai64-porting/docs/ethfw-role-and-disable-en.md"
+  },
+  {
+    "ko": "bbai64-porting/docs/ort-thread-diagnostics-ko.md",
+    "en": "bbai64-porting/docs/ort-thread-diagnostics-en.md"
+  },
+  {
+    "ko": "bbai64-porting/docs/porting-plan-ko.md",
+    "en": "bbai64-porting/docs/porting-plan-en.md"
+  },
+  {
+    "ko": "bbai64-porting/docs/porting-reassessment-ko.md",
+    "en": "bbai64-porting/docs/porting-reassessment-en.md"
+  },
+  {
+    "ko": "bbai64-porting/docs/r47-kernel-deployment-ko.md",
+    "en": "bbai64-porting/docs/r47-kernel-deployment-en.md"
+  },
+  {
+    "ko": "bbai64-porting/docs/repeat-validation-ko.md",
+    "en": "bbai64-porting/docs/repeat-validation-en.md"
+  },
+  {
+    "ko": "bbai64-porting/docs/rpmsg-failure-analysis-ko.md",
+    "en": "bbai64-porting/docs/rpmsg-failure-analysis-en.md"
+  },
+  {
+    "ko": "bbai64-porting/docs/run-diagnostics-guide-ko.md",
+    "en": "bbai64-porting/docs/run-diagnostics-guide-en.md"
+  },
+  {
+    "ko": "bbai64-porting/docs/tidl3-deployment-ko.md",
+    "en": "bbai64-porting/docs/tidl3-deployment-en.md"
+  },
+  {
+    "ko": "bbai64-porting/docs/unresolved-issues-ko.md",
+    "en": "bbai64-porting/docs/unresolved-issues-en.md"
+  },
+  {
+    "ko": "bbai64-porting/docs/validation-results-template-ko.md",
+    "en": "bbai64-porting/docs/validation-results-template-en.md"
+  },
+  {
+    "ko": "bbai64-porting/firmware-work/README-ko.md",
+    "en": "bbai64-porting/firmware-work/README-en.md"
+  },
+  {
+    "ko": "bbai64-porting/firmware-work/deployment-noeth-ko.md",
+    "en": "bbai64-porting/firmware-work/deployment-noeth-en.md"
+  },
+  {
+    "ko": "bbai64-porting/firmware-work/deployment-trace-ko.md",
+    "en": "bbai64-porting/firmware-work/deployment-trace-en.md"
+  },
+  {
+    "ko": "bbai64-porting/firmware-work/deployment-trace-wb-ko.md",
+    "en": "bbai64-porting/firmware-work/deployment-trace-wb-en.md"
+  },
+  {
+    "ko": "bbai64-porting/patches/README-ko.md",
+    "en": "bbai64-porting/patches/README-en.md"
+  },
+  {
+    "ko": "bbai64-porting/patches/ti-dma-backport-ko.md",
+    "en": "bbai64-porting/patches/ti-dma-backport-en.md"
+  },
+  {
+    "ko": "bbai64-porting/patches/tidl2-build-start-ko.md",
+    "en": "bbai64-porting/patches/tidl2-build-start-en.md"
+  },
+  {
+    "ko": "bbai64-porting/patches/tidl3-build-start-ko.md",
+    "en": "bbai64-porting/patches/tidl3-build-start-en.md"
+  },
+  {
+    "ko": "bbai64-porting/rpmsg-work/README-ko.md",
+    "en": "bbai64-porting/rpmsg-work/README-en.md"
+  },
+  {
+    "ko": "bbai64-porting/rpmsg-work/step05-diagnostics-ko.md",
+    "en": "bbai64-porting/rpmsg-work/step05-diagnostics-en.md"
+  },
+  {
+    "ko": "docs/bbai64-porting-strategy-ko.md",
+    "en": "docs/bbai64-porting-strategy-en.md"
+  },
+  {
+    "ko": "docs/psdk-porting-preanalysis-ko.md",
+    "en": "docs/psdk-porting-preanalysis-en.md"
+  },
+  {
+    "ko": "docs/tidl-ep-porting-readiness-ko.md",
+    "en": "docs/tidl-ep-porting-readiness-en.md"
+  },
+  {
+    "ko": "summary/01-reproduction-ko.md",
+    "en": "summary/01-reproduction-en.md"
+  },
+  {
+    "ko": "summary/02-troubleshooting-ko.md",
+    "en": "summary/02-troubleshooting-en.md"
+  },
+  {
+    "ko": "summary/03-porting-checklist-ko.md",
+    "en": "summary/03-porting-checklist-en.md"
+  },
+  {
+    "ko": "tidl/README-ko.md",
+    "en": "tidl/README-en.md"
+  },
+  {
+    "ko": "tidl/ready/resnet18/README-ko.md",
+    "en": "tidl/ready/resnet18/README-en.md"
+  },
+  {
+    "ko": "tidl/sigbus-analysis-ko.md",
+    "en": "tidl/sigbus-analysis-en.md"
+  }
+]

@@ -46,6 +46,8 @@ TI ONNX Runtime 1.15.0 / TIDLExecutionProvider
 
 배송 구성을 활용한 첫 실험에서는 다중 코어 초기화 계약을 보존하고 Linux 데모 파일만 줄이는 것이 현실적이다. 이후 C71x 전용 구성에서는 A72/RTOS CPU 목록, MCU2_0 마스터에 의존하는 시작 장벽, 공유 로그·descriptor 초기화 주체와 보드 서비스 소유권을 함께 재검토한다. 코어별 펌웨어의 기동 여부와 연산 배치는 별개의 검증 항목이다.
 
+<a id="section-06"></a>
+
 ### C. Device Tree 및 펌웨어
 
 아래는 SDK 이미지의 `boot/dtb/ti/k3-j721e-beagleboneai64.dtb`와 `k3-j721e-vision-apps.dtbo`의 phandle 순서다. 각 쌍은 `[0] DMA / [1] 펌웨어` 시작 주소이며 오버레이의 대상은 `__fixups__`로 식별했다. 대상 Debian의 실제 DT와는 별도로 취급한다. [공개 v6.18 BBAI64 DTS](https://github.com/torvalds/linux/blob/v6.18/arch/arm64/boot/dts/ti/k3-j721e-beagleboneai64.dts)
@@ -65,6 +67,8 @@ TI ONNX Runtime 1.15.0 / TIDLExecutionProvider
 - **가능성 높음** — 배송 펌웨어 재사용의 최소 DT 변경은 필요한 코어의 참조, 기존 충돌 carveout 비활성화, 공유 IPC/descriptor/heap 및 의존 피어의 예약 영역 통합이다. R5F0_0의 기본 펌웨어 공간은 15 MiB, Vision Apps는 31 MiB이며 배송 ELF는 `0xa4000000` 경계까지 로드한다. 따라서 C71x만 주소를 교체하고 배송 R5F를 동시에 활성화할 수 없다. Ethernet 큐·버퍼 참조의 필요 여부는 해당 MCU2_0 이미지의 ETHFW 기능과 자원 소유권으로 결정한다. EVM 오버레이의 보드 전용 fragment는 대상 심볼과 기존 장치에 미치는 영향을 검토한다.
 - **미확인** — 실제 DT의 모든 활성 예약 영역과 부트로더 예약, CMA 위치, R5F split/lockstep과 TCM, DSP DMA 주소 범위, 고주소 heap의 접근권 및 서명 변형. 대상 DTB·DTBO, 적용 순서, live FDT와 해당 커널 드라이버가 필요하다. 정적 검사 시 보드 DTS·SoC include와 병합 DT를 확보해 64비트 주소, phandle 순서 및 코어별 로드 범위를 함께 검사한다.
 
+<a id="section-07"></a>
+
 ### D. Linux 6.18 인터페이스
 
 | 구분 | 확인 범위 및 포팅 대상 |
@@ -72,6 +76,8 @@ TI ONNX Runtime 1.15.0 / TIDLExecutionProvider
 | 표준 Linux 기능만으로 사용 가능 | remoteproc/virtio RPMsg, RPMsg character endpoint, DMA-BUF fd 공유·동기화 및 DMA heap의 기본 UAPI는 일반 Linux 경로다. J721E에서는 K3 DSP/R5 드라이버와 TI SCI/mailbox/power/reset 결합이 필요하다. 동봉 6.12.57-ti 모듈 `ti_k3_{dsp,r5}_remoteproc.ko`의 ELF에서 `devm_rproc_add` 및 `devm_ti_sci_get_by_phandle` 참조를 확인했다. [Linux remoteproc 문서](https://docs.kernel.org/staging/remoteproc.html), [Linux DMA-BUF 문서](https://docs.kernel.org/driver-api/dma-buf.html) |
 | TI 전용 드라이버 또는 패치가 필요할 가능성 | 배송 `libtivision_apps.so`에서 `/dev/dma_heap/carveout_vision_apps_shared-memories`, `/dev/remoteproc0`, `/dev/mem` 문자열을 확인했다. `app_utils/utils/mem/src/app_mem_linux_dma_heap.c`는 heap 할당, `DMA_BUF_IOCTL_SYNC`, `RPROC_IOC_DMA_BUF_ATTACH` 주소 조회와 물리 메모리 매핑 경로를 갖는다. ioctl의 구조체 계약은 `app_utils/utils/mem/include/linux/dma_buf_phys.h`에 있다. 일반 heap/CMA로 fd를 얻는 것과 TI 주소 조회 계약을 만족하는 것은 별개다. 누락 시 `drivers/dma-buf/heaps/`의 carveout exporter와 DT 바인딩, `drivers/remoteproc/remoteproc_cdev.c` 및 대응 UAPI·DMA-BUF 매핑 헬퍼를 비교한다. 보완 범위는 누락이 증명된 기능으로 한정하거나 A72 allocator/주소 매핑 방식을 함께 이식한다. [TI carveout heap 이력](https://git.ti.com/cgit/ti-linux-kernel/ti-linux-kernel/commit/?id=f22103162c771ddd47372b579682445e6dc8dd0e) |
 | 실제 커널 설정 및 보드에서 추가 확인 필요 | `CONFIG_REMOTEPROC`, K3 R5/DSP, mailbox, TI SCI, RPMsg virtio/char, DMA-BUF heaps, CMA, devmem 정책과 장치 권한을 확인한다. `remoteproc0`의 실제 이름과 ioctl 지원, heap 노드명, 주소 및 캐시 일관성을 각각 검증한다. SDK 6.12.57-ti 정확한 소스와 대상 6.18 브랜치의 구현을 줄 단위로 확보하지 못했다. 6.18 커널 버전만으로 TI 기능의 존재·부재를 판정할 수 없다. |
+
+<a id="section-08"></a>
 
 ### E. AArch64 바이너리 재사용 판정
 

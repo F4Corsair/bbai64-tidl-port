@@ -1,3 +1,5 @@
+0c70e6cceed14bcf04e65dbb458b1a2c30752b931507cd77bd8dabb614ed57bc  files/documentation-map.json
+39611e0e3484856226d818ddec894df8e935026717efad301b46e8aa93b9b94c  files/documentation-validation.json
 b38a73bbbb0b54c56f0c2c7ad16f5c4c17f88fe330de2fca46775f56c73fd8f5  files/firmware-work/0001-mcu2-0-init-trace.patch
 d49891d6a83611f12e8a7239dc9b71106258ca0898263a66e7215664fa3f8d6a  files/firmware-work/0002-r5-trace-cache-writeback.patch
 e758675a08e71f07b08ae064a8dd48f43f7b87fa7a4b63d5dbc97083f42b08ce  files/firmware-work/build.sh
@@ -19,6 +21,7 @@ ecf20d2a452e3e40b40ecc218496b66fb3c60ac2d042b6f2c945afcd4fed24f0  files/scripts/
 f89932f0fff3dfcfdf130962d64e1c5b63eff900db14b40c4f379d064d4c9fcb  files/scripts/06-diagnose-tidl-run.sh
 06a873134fe20641694799ea32a30286ad56bd77133361bdf60ce21f07318770  files/scripts/08-check-tidl-repeat.sh
 d68ec206c91c052b825e3d071cf120b4bbad9e320eaacaba98dc306400935efd  files/scripts/build-tidl3-kernel.sh
+775c5d755d7bf6517a7c80beab80361a35f9c80da688b1d4d5f4d569b5d94eb3  files/scripts/check-documentation.py
 be169e7c7bab1a1647c2259b495ea341d2813ebd94628e7fb34d8e788b9b6364  files/scripts/check-live-dt.py
 01510786409dfd79630f733d08fcdce53b24456282877753e9df022e48933139  files/scripts/common.sh
 a682cd629afd246279aac048750799b903ecbf968b429eca6e0160d1b6a240ba  files/scripts/export-sdk-runtime.py

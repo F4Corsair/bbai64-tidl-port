@@ -1,13 +1,12 @@
-# Allow only summary/ and Markdown documents reachable through its links.
-# Includes transitive Markdown links; other linked assets remain ignored.
+# Track bilingual documentation and the summary reproduction payload only.
 *
 !/.gitignore
 !/README.md
+!/README-ko.md
+!/AGENTS.md
 !/summary/
 !/summary/**
-!AGENTS.md
 
-# Open only the directories containing referenced documents.
 !/bbai64-porting/
 !/docs/
 !/tidl/
@@ -18,33 +17,62 @@
 !/tidl/ready/
 !/tidl/ready/resnet18/
 
-# Referenced Markdown documents (refresh when documentation links change).
+# Explicit bilingual document allowlist.
+!/bbai64-porting/docs/bringup-status-en.md
 !/bbai64-porting/docs/bringup-status-ko.md
+!/bbai64-porting/docs/deployment-guide-en.md
 !/bbai64-porting/docs/deployment-guide-ko.md
+!/bbai64-porting/docs/ethfw-role-and-disable-en.md
 !/bbai64-porting/docs/ethfw-role-and-disable-ko.md
+!/bbai64-porting/docs/ort-thread-diagnostics-en.md
 !/bbai64-porting/docs/ort-thread-diagnostics-ko.md
+!/bbai64-porting/docs/porting-plan-en.md
 !/bbai64-porting/docs/porting-plan-ko.md
+!/bbai64-porting/docs/porting-reassessment-en.md
 !/bbai64-porting/docs/porting-reassessment-ko.md
+!/bbai64-porting/docs/r47-kernel-deployment-en.md
 !/bbai64-porting/docs/r47-kernel-deployment-ko.md
+!/bbai64-porting/docs/repeat-validation-en.md
 !/bbai64-porting/docs/repeat-validation-ko.md
+!/bbai64-porting/docs/rpmsg-failure-analysis-en.md
 !/bbai64-porting/docs/rpmsg-failure-analysis-ko.md
+!/bbai64-porting/docs/run-diagnostics-guide-en.md
 !/bbai64-porting/docs/run-diagnostics-guide-ko.md
+!/bbai64-porting/docs/tidl3-deployment-en.md
 !/bbai64-porting/docs/tidl3-deployment-ko.md
+!/bbai64-porting/docs/unresolved-issues-en.md
 !/bbai64-porting/docs/unresolved-issues-ko.md
+!/bbai64-porting/docs/validation-results-template-en.md
 !/bbai64-porting/docs/validation-results-template-ko.md
+!/bbai64-porting/firmware-work/README-en.md
 !/bbai64-porting/firmware-work/README-ko.md
+!/bbai64-porting/firmware-work/deployment-noeth-en.md
 !/bbai64-porting/firmware-work/deployment-noeth-ko.md
+!/bbai64-porting/firmware-work/deployment-trace-en.md
 !/bbai64-porting/firmware-work/deployment-trace-ko.md
+!/bbai64-porting/firmware-work/deployment-trace-wb-en.md
 !/bbai64-porting/firmware-work/deployment-trace-wb-ko.md
-!/bbai64-porting/patches/README.md
+!/bbai64-porting/patches/README-en.md
+!/bbai64-porting/patches/README-ko.md
+!/bbai64-porting/patches/ti-dma-backport-en.md
 !/bbai64-porting/patches/ti-dma-backport-ko.md
+!/bbai64-porting/patches/tidl2-build-start-en.md
 !/bbai64-porting/patches/tidl2-build-start-ko.md
+!/bbai64-porting/patches/tidl3-build-start-en.md
 !/bbai64-porting/patches/tidl3-build-start-ko.md
+!/bbai64-porting/rpmsg-work/README-en.md
 !/bbai64-porting/rpmsg-work/README-ko.md
+!/bbai64-porting/rpmsg-work/step05-diagnostics-en.md
 !/bbai64-porting/rpmsg-work/step05-diagnostics-ko.md
+!/docs/bbai64-porting-strategy-en.md
 !/docs/bbai64-porting-strategy-ko.md
+!/docs/psdk-porting-preanalysis-en.md
 !/docs/psdk-porting-preanalysis-ko.md
+!/docs/tidl-ep-porting-readiness-en.md
 !/docs/tidl-ep-porting-readiness-ko.md
+!/tidl/README-en.md
 !/tidl/README-ko.md
+!/tidl/ready/resnet18/README-en.md
 !/tidl/ready/resnet18/README-ko.md
+!/tidl/sigbus-analysis-en.md
 !/tidl/sigbus-analysis-ko.md

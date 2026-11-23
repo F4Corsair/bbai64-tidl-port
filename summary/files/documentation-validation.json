@@ -1,0 +1,11 @@
+{
+  "pairs": 33,
+  "documents": 66,
+  "markdown_links": 150,
+  "link_anchor_language_checks": "PASS",
+  "bash_blocks_executable_equivalence_checked": 89,
+  "version_hash_hex_checks": "PASS",
+  "gitignore_document_allowlist": "PASS",
+  "scope": "Documentation only; no SDK or operational script edits; no build, SSH, staging or commit performed",
+  "correction": "Replaced residual Japanese recovery paragraph in tidl3-deployment-ko.md with Korean of the same meaning."
+}

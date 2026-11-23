@@ -1,42 +1,46 @@
-# BBAI64 TIDL 포팅 기록
-
-BeagleBone AI-64(J721E)에서 Debian을 유지하며 TI ONNX Runtime의 TIDL Execution Provider로 추론을 실행한 기록과 재현 자료입니다.
-
-**확인된 성과:** ResNet18 전체 49개 노드 TIDL 배정, 실제 추론 및 CPU 출력 비교 통과, 워밍업 1회와 반복 10회 성공, 반복 출력 변화 0. MMA 직접 사용 근거·제품 정확도·장시간 안정성은 별도 검증 항목입니다.
-
-## 먼저 읽을 문서
-
-| 문서 | 내용 |
+| English | 한국어 |
 |---|---|
-| [작업 재현 핵심 노트](summary/01-reproduction-ko.md) | 순정 상태에서 필요한 단계·버전·실행 명령·남은 작업 |
-| [시행착오 확인용 노트](summary/02-troubleshooting-ko.md) | 단계별 문제와 해결, 상세 자료 링크 |
-| [TIDL 포팅 정보 노트](summary/03-porting-checklist-ko.md) | 다른 버전·보드에서 확인할 호환성 및 검증 기준 |
+| [English README](README.md) | [한국어 README](README-ko.md) |
 
-필수 패치·설정·스크립트는 [summary/files](summary/files)에 있습니다. SDK·Linux 전체 소스·대용량 빌드 결과·모델은 포함하지 않습니다. 단축 재현 절차 전체를 새 순정 SD에서 다시 시험한 것은 아니므로 핵심 노트의 전제와 중단 조건을 확인하세요.
+# BBAI64 TIDL Porting Record
 
-## 검증 구성
+Implementation notes and reproduction resources for running inference through the TI ONNX Runtime TIDL Execution Provider on BeagleBone AI-64 (J721E), while retaining Debian.
 
-| 항목 | 버전·설정 |
+**Verified results:** all 49 ResNet18 nodes assigned to TIDL; inference and CPU-output comparison passed; one warm-up and ten measured runs completed with no change in repeated outputs. Direct evidence of MMA use, application-level accuracy, and long-duration stability remain separate validation tasks.
+
+## Start here
+
+| Document | Contents |
 |---|---|
-| 보드 | BeagleBone AI-64 / TI J721E |
+| [Reproduction essentials](summary/01-reproduction-en.md) | Required steps, versions, commands, and remaining work starting from a stock system |
+| [Troubleshooting record](summary/02-troubleshooting-en.md) | Problems encountered, fixes, and links to supporting documents |
+| [TIDL porting checklist](summary/03-porting-checklist-en.md) | Compatibility and validation checks for other releases and boards |
+
+Required patches, configuration files, and scripts are in [summary/files](summary/files). Full SDK and Linux source trees, large build outputs, and models are excluded. The shortened procedure has not yet been rerun end to end on a freshly flashed SD card; check its prerequisites and stop conditions.
+
+## Validated configuration
+
+| Item | Version or setting |
+|---|---|
+| Board | BeagleBone AI-64 / TI J721E |
 | OS | Debian 13.6 |
-| 커널 | 6.18.39-arm64-k3-r47 기반, 호환 패치 적용 tidl3 |
-| PSDK | RTOS 11.02.00.06 / 대응 Linux 11.02.00.04 |
+| Kernel | Based on 6.18.39-arm64-k3-r47, with compatibility patches; tidl3 build |
+| PSDK | RTOS 11.02.00.06 / corresponding Linux 11.02.00.04 |
 | TIDL Tools / TI ONNX Runtime | 11_02_04_00 / 1.15.0 |
-| MCU2_0 펌웨어 | ETHFW 비활성화 |
-| ORT 실행 | 단일 스레드·순차 실행·spin 비활성화 |
+| MCU2_0 firmware | ETHFW disabled |
+| ORT execution | Single-threaded, sequential execution, spinning disabled |
 
-## 상세 근거
+## Supporting evidence
 
-- [포팅 가능성·양자화 재평가 및 반복 검증 결과](bbai64-porting/docs/porting-reassessment-ko.md)
-- [IPC·RPMsg·TIDL 실행 장애 분석](bbai64-porting/docs/rpmsg-failure-analysis-ko.md)
-- [ETHFW의 역할과 비활성화 영향](bbai64-porting/docs/ethfw-role-and-disable-ko.md)
-- [초기 SDK·Device Tree 사전 분석](docs/psdk-porting-preanalysis-ko.md)
+- [Porting feasibility, quantization reassessment, and repeated-run results](bbai64-porting/docs/porting-reassessment-en.md)
+- [IPC, RPMsg, and TIDL execution failure analysis](bbai64-porting/docs/rpmsg-failure-analysis-en.md)
+- [ETHFW responsibilities and the impact of disabling it](bbai64-porting/docs/ethfw-role-and-disable-en.md)
+- [Initial SDK and Device Tree analysis](docs/psdk-porting-preanalysis-en.md)
 
-상세 문서는 조사 당시의 상태와 중간 절차를 포함합니다. 재현은 최신 핵심 노트를 우선하고, 과거 실패 단계를 그대로 반복하지 마세요.
+Detailed documents include historical states and intermediate procedures. Use the latest reproduction essentials when reproducing the setup; do not repeat superseded failure stages.
 
-## 작업 원칙
+## Working rules
 
-SDK 원본은 읽기 전용으로 유지합니다. 커널 빌드와 배포, 보드 업로드·설치·재부팅은 사용자가 수행합니다. 정상 부트 환경과 SD 복구 수단을 보존한 상태에서 단계별로 적용합니다.
+Keep the original SDK read-only. The user builds and deploys kernels and performs board uploads, installation, and reboots. Apply changes incrementally while preserving a working boot configuration and an SD-card recovery path.
 
-이 저장소는 README, summary 전체 및 summary에서 참조하는 Markdown 문서를 중심으로 관리합니다. 제외된 바이너리·로그 링크는 원래 작업 공간이 있어야 열릴 수 있습니다.
+This repository primarily tracks the README files, all of summary, and Markdown documents referenced from summary. Links to excluded binaries and logs may require the original workspace.

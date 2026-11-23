@@ -50,10 +50,10 @@
 
 ### r47 소스 대조로 확정한 후속 판단
 
-공개 `6.18.39-arm64-k3-r47` 태그의 커밋 `c03783811916b255c974912b3fd2eceb30fa8146`에서 **TI carveout exporter와 `RPROC_IOC_DMA_BUF_ATTACH` 처리 분기가 모두 빠져 있음**을 확인했다. 앞 절의 구현 미확인 판정을 대체한다. DT의 512 MiB 예약은 이미 성공했으므로, SDK 바이너리 재사용 경로에는 두 커널 기능을 함께 보완해야 한다. [소스 및 판정 근거](../../docs/bbai64-porting-strategy-ko.md#r47-커널-소스-확인)
+공개 `6.18.39-arm64-k3-r47` 태그의 커밋 `c03783811916b255c974912b3fd2eceb30fa8146`에서 **TI carveout exporter와 `RPROC_IOC_DMA_BUF_ATTACH` 처리 분기가 모두 빠져 있음**을 확인했다. 앞 절의 구현 미확인 판정을 대체한다. DT의 512 MiB 예약은 이미 성공했으므로, SDK 바이너리 재사용 경로에는 두 커널 기능을 함께 보완해야 한다. [소스 및 판정 근거](../../docs/bbai64-porting-strategy-ko.md#section-14)
 
 SDK 릴리스 문자열과 일치하는 TI 커밋에서 두 구현을 찾았다. r47의 이식 범위와 검증 조건을 [TI DMA 기능 이식 범위](../patches/ti-dma-backport-ko.md)에 정리했다. 특히 주소 조회의 반환값은 DMA 주소이므로 SDK가 기대하는 공유 주소와의 일치 여부를 실기에서 확인해야 한다.
 
-r47용 exporter와 주소 조회 패치를 작성했고 ARM64 객체 빌드와 SDK의 ioctl ABI 일치를 확인했다. 다음 검증은 전체 이미지·모듈 빌드 및 시험 SD에서의 heap·DMA 주소 확인이다. [패치 및 재현 절차](../patches/README.md)
+r47용 exporter와 주소 조회 패치를 작성했고 ARM64 객체 빌드와 SDK의 ioctl ABI 일치를 확인했다. 다음 검증은 전체 이미지·모듈 빌드 및 시험 SD에서의 heap·DMA 주소 확인이다. [패치 및 재현 절차](../patches/README-ko.md)
 
 전체 ARM64 이미지와 모듈을 빌드하고 `6.18.39-arm64-k3-r47-tidl1` 로컬 배포 세트를 만들었다. 재부팅 후 heap 노출 및 DMA 주소를 확인하는 명령과 SD 오프라인 복구 절차는 [보드 적용 가이드](r47-kernel-deployment-ko.md)에 있다.

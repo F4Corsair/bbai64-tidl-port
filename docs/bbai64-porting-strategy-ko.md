@@ -27,7 +27,7 @@
 | MAIN R5F1_0/1 | `a4000000 → a4100000`, `a5000000 → a5100000` | `a6000000 → a6100000`, `a7000000 → a7100000` |
 | MCU R5F0_0/1 | `a0000000 → a0100000`, `a1000000 → a1100000` | 동일 |
 
-- **확인됨** — 이전 분석의 SDK 동봉 BBAI64 기본 DTB는 C66 DMA가 연속 쌍이었지만 실기에서는 교차한다. 인덱스 0은 DMA 풀이고 인덱스 1은 펌웨어 영역이다. MAIN 두 클러스터의 `ti,cluster-mode`는 0, MCU 클러스터는 1이다. 표의 SDK 값과 ELF 로드 근거는 이전 정적 분석에서 가져왔다. [live DT 해석](bbai64-survey/live-dt-summary.txt) · [SDK 비교](tidl-ep-porting-readiness-ko.md#c-device-tree-및-펌웨어)
+- **확인됨** — 이전 분석의 SDK 동봉 BBAI64 기본 DTB는 C66 DMA가 연속 쌍이었지만 실기에서는 교차한다. 인덱스 0은 DMA 풀이고 인덱스 1은 펌웨어 영역이다. MAIN 두 클러스터의 `ti,cluster-mode`는 0, MCU 클러스터는 1이다. 표의 SDK 값과 ELF 로드 근거는 이전 정적 분석에서 가져왔다. [live DT 해석](bbai64-survey/live-dt-summary.txt) · [SDK 비교](tidl-ep-porting-readiness-ko.md#section-06)
 - **확인됨** — live DT의 정적 `reserved-memory/reg` 구간끼리 겹치지 않는다. RAM은 `[0x80000000,0x100000000)`와 `[0x880000000,0x900000000)`다. 부팅 로그상 CMA는 `[0xf3e00000,0xfce00000)`(144 MiB)로, SDK의 C71x 영역 `[0xb2100000,0xb8000000)` 및 공유 heap `[0xb8000000,0xd8000000)`과 겹치지 않는다. 반면 새 C71x 영역만 추가하면 SDK의 나머지 영역은 기존 DSP·R5F와 충돌한다. 실기 IPC `[0xaa000000,0xabc00000)`도 SDK의 끝 `0xac000000`까지 확장해야 한다. [전체 예약 구간](bbai64-survey/live-dt-summary.txt) · [CMA 로그](bbai64-survey/board.log)
 - **추정** — BBAI64 보드 설정을 유지한 채 충돌하는 예약 영역과 해당 코어 참조를 함께 교체하면 SDK 주소 체계를 적용할 수 있다. IPC·descriptor·공유 heap·C7x high heap을 포함해야 한다. EVM DTBO를 그대로 적용하려면 외부 심볼과 EVM 전용 ETHFW 참조가 모두 해결되는지 검증해야 한다. BBAI64용 최소 통합이 우선이다. 접근이 제한된 물리 주소 정보와 원본 FDT의 예약 테이블까지 대조한 뒤 최종 충돌 여부를 판정한다.
 
@@ -47,13 +47,13 @@
 | `RPROC_IOC_DMA_BUF_ATTACH` | **미확인.** `CONFIG_REMOTEPROC_CDEV=y`, `rproc_device_ioctl` 심볼과 char 장치 존재는 확인됐다. 해당 ioctl의 dispatch를 보여주는 정확한 소스는 보드 헤더에 없었다. ioctl은 호출하지 않았다. |
 | 디바이스 번호 및 권한 | **확인됨.** 배송 allocator의 `/dev/remoteproc0`은 실기에서 DSP0이다. 대상 장치에 대한 attach의 주소 의미를 소스로 확인하고 안정적인 코어 식별을 사용한다. 현재 remoteproc, rpmsg 및 heap 장치는 root 전용이고 `/dev/mem`은 `root:kmem` 0640이다. 런타임 권한과 mmap 요건은 별도 설계가 필요하다. |
 
-[커널 설정](bbai64-survey/kernel.config) · [심볼 및 장치 로그](bbai64-survey/interfaces.log) · [SDK allocator 분석](tidl-ep-porting-readiness-ko.md#d-linux-618-인터페이스)
+[커널 설정](bbai64-survey/kernel.config) · [심볼 및 장치 로그](bbai64-survey/interfaces.log) · [SDK allocator 분석](tidl-ep-porting-readiness-ko.md#section-07)
 
 커널 기능이 빠졌다면 우선 TI 6.12 계열의 carveout exporter, 바인딩, remoteproc cdev·UAPI·DMA 매핑을 대상 브랜치와 대조한다. 필요한 부분만 옮기는 방법은 SDK 사용자 공간을 보존하지만 커널 API 적응과 권한 검증이 필요하다. 기존 커널을 그대로 쓰고 allocator를 바꾸는 방법은 지원 heap 선택, DSP에 유효한 주소 획득, 버퍼 수명·캐시 동기화까지 다시 검증해야 하므로 이름 교체보다 범위가 크다. 차이가 크면 TI 계열 커널을 별도 SD에 두고 펌웨어·런타임 기준 시험에 사용한다.
 
 ### TIDL Runtime 및 ABI
 
-**확인됨** — 실기 glibc 2.41 및 libstdc++6 14.2는 이전 SDK 검사에서 확인한 `GLIBC_2.38`, `GLIBCXX_3.4.32`를 포함한다. `libEGL.so.1`, `libGLESv2.so.2`, `libgbm.so.1`도 로더 캐시에 있다. Debian ORT는 1.21, Python은 3.13이며 SDK ORT는 1.15.0 및 Python 3.12 확장이다. 실기 로더 캐시에서 TI TIDL·Vision Apps·RPMsg DSO를 확인하지 못했다. [실기 ABI](bbai64-survey/interfaces.log) · [SDK ELF·SONAME 분석](tidl-ep-porting-readiness-ko.md#e-aarch64-바이너리-재사용-판정)
+**확인됨** — 실기 glibc 2.41 및 libstdc++6 14.2는 이전 SDK 검사에서 확인한 `GLIBC_2.38`, `GLIBCXX_3.4.32`를 포함한다. `libEGL.so.1`, `libGLESv2.so.2`, `libgbm.so.1`도 로더 캐시에 있다. Debian ORT는 1.21, Python은 3.13이며 SDK ORT는 1.15.0 및 Python 3.12 확장이다. 실기 로더 캐시에서 TI TIDL·Vision Apps·RPMsg DSO를 확인하지 못했다. [실기 ABI](bbai64-survey/interfaces.log) · [SDK ELF·SONAME 분석](tidl-ep-porting-readiness-ko.md#section-08)
 
 **추정** — TI ORT 1.15.0, `libtidl_onnxrt_EP`, `libvx_tidl_rt`, `libtivision_apps`, `libti_rpmsg_char`와 대응 provider 라이브러리를 동일 릴리스에서 가져와 별도 경로에 두면 재사용 가능성이 높다. 동일 이름의 시스템 `libonnxruntime_providers_shared.so`가 섞이지 않도록 경로를 검증한다. SDK Python 확장 대신 C++로 시작한다. 실제 동적 로딩, 간접 의존, EP 등록과 IPC 실행은 **미확인**이다. J721E 버전 기준은 Linux 11.02.00.04, RTOS 11.02.00.06, Tools 11_02_04_00이다. [이전 버전 및 ABI 검증](tidl-ep-porting-readiness-ko.md)
 
@@ -110,6 +110,8 @@ Codex가 다음에 바로 할 수 있는 준비는 **수집 DT를 기준으로 �
 실행 커널의 모듈·내장 모듈 목록, 설정 및 심볼에서는 TI exporter 지원 근거가 확인되지 않았다. `rproc_device_ioctl`은 존재하지만 해당 TI ioctl의 처리 분기는 설치된 헤더 트리에서 확인할 수 없었다. 두 구현의 유무는 정확한 실행 커널 소스와 패치 구성에 대한 확인이 남아 있다.
 
 기존 `beagle` SSH 별칭에서 일반 사용자 권한으로 live DT, 장치 목록, 커널 설정, 모듈·심볼, 부팅 로그와 RPMsg 경로를 읽었다. [수행 명령](bbai64-survey/dma-followup.sh) · [수집 로그](bbai64-survey/dma-followup.log) · [포팅 판단](../bbai64-porting/docs/bringup-status-ko.md)
+
+<a id="section-14"></a>
 
 ## r47 커널 소스 확인
 
