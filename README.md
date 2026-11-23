@@ -44,3 +44,9 @@ Detailed documents include historical states and intermediate procedures. Use th
 Keep the original SDK read-only. The user builds and deploys kernels and performs board uploads, installation, and reboots. Apply changes incrementally while preserving a working boot configuration and an SD-card recovery path.
 
 This repository primarily tracks the README files, all of summary, and Markdown documents referenced from summary. Links to excluded binaries and logs may require the original workspace.
+
+## Development Note
+
+This project was developed with assistance from AI coding tools. Porting procedures, kernel modifications, and validation results are documented based on the project's development and testing records.
+
+This repository is an independent experimental project and is not officially supported by Texas Instruments or BeagleBoard.org.
