@@ -47,7 +47,7 @@ ETHFW를 끄는 것과 `BUILD_MCU_BOARD_DEPENDENCIES=no`는 다르다. 후자는
 | 6. 모델·실제 추론 | 같은 버전 Tools로 컴파일한 모델을 CPU와 호스트 TIDL에서 먼저 확인, 보드 EP에서 실행 | 실제 graph verify/Run/출력 반환·CPU 비교·처리 구간 |
 | 7. 작동 구성 고정 | 반복 추론, 프로파일, 파일/설정 해시와 설치/복구 절차 정리 | 재현 가능한 기능 세트. 제품 정확도·성능·장시간 검증은 별도 계획 |
 
-호스트 모델 검증은 2–5단계와 독립적으로 준비할 수 있다. 다만 보드 추론은 커널·펌웨어·공유 메모리 준비가 완료된 뒤 수행한다. 이 프로젝트에서는 ORT 두 세션의 단일 스레드·순차 실행·spin off도 작동 구성에 포함된다.
+호스트 모델 검증은 2–5단계와 독립적으로 준비할 수 있다. 다만 보드 추론은 커널·펌웨어·공유 메모리 준비가 완료된 뒤 수행한다. 기존 C++ 재현 절차는 명시적 스레드 설정을 사용한다. 같은 포팅 구성에서 TI ORT 1.15.0, SDK의 격리된 Python 3.12 환경, TIDL Tools `11_02_04_00` 공식 Python Wrapper가 통과했다. Wrapper가 지정하는 intra-op 설정을 그대로 사용한다. 같은 ResNet18 입력으로 직접 만든 Python 세션도 스레드 옵션을 모두 기본값으로 둔 경우에 통과했다. 다른 구성에서는 Python ABI와 TIDL EP 가용성을 점검하고, 양의 TIDL 처리 구간과 CPU 출력 비교로 실제 오프로딩을 확인한다. [Python 실행 가이드](../bbai64-porting/python-ort-validation/README-ko.md), [보드 검증 결과](../bbai64-porting/python-ort-validation/results-ko.md)
 
 ## 4. 커널 패치와 드라이버 이식은 어떻게 수행하는가
 

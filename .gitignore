@@ -76,3 +76,7 @@
 !/tidl/ready/resnet18/README-ko.md
 !/tidl/sigbus-analysis-en.md
 !/tidl/sigbus-analysis-ko.md
+
+# Python ORT experiment reports
+!/bbai64-porting/python-ort-validation/
+!/bbai64-porting/python-ort-validation/*.md

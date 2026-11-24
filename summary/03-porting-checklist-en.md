@@ -47,7 +47,7 @@ Disabling ETHFW is different from BUILD_MCU_BOARD_DEPENDENCIES=no, which also ch
 | 6. Model/inference | Validate matching compiled artifacts on CPU/host TIDL, then board EP | Actual graph verify/Run/output return, CPU comparison, processing intervals |
 | 7. Pin the working set | Repeats, profiling, hashes, installation/recovery | Reproducible functional setup; separate accuracy/performance/endurance plans |
 
-Host model validation can proceed independently alongside stages2–5. Board inference follows kernel/firmware/shared-memory preparation. Both ORT sessions' single-thread/sequential/spin-off settings are also part of this project's working configuration.
+Host model validation can proceed independently alongside stages2–5. Board inference follows kernel/firmware/shared-memory preparation. The historical C++ reproduction uses explicit thread settings. For Python on the same ported BBAI64, the official TI TIDL Tools `11_02_04_00` wrapper passed with TI ORT 1.15.0 and the SDK's isolated Python 3.12 environment. Use its built-in intra-op setting. Direct Python sessions with all thread settings left at their defaults also passed for this ResNet18 input. On another configuration, check the Python ABI, TIDL EP availability, and actual offload with a positive TIDL processing interval and a CPU output comparison. [Python guide](../bbai64-porting/python-ort-validation/README-en.md), [board results](../bbai64-porting/python-ort-validation/results-en.md)
 
 ## 4. How to backport kernel and driver functionality
 
