@@ -1,0 +1,212 @@
+2026-11-25T05:02:20+00:00
+6.18.39-arm64-k3-r47-tidl3
+13.6
+console=ttyS2,115200n8 earlycon=ns16550a,mmio32,0x02800000 root=/dev/mmcblk1p3 ro rootfstype=ext4 fsck.repair=yes resume=/dev/mmcblk1p2 rootwait net.ifnames=0 bbai64_tidl.entry=tidl-kernel-test-3
+CONFIG_MEDIA_CONTROLLER=y
+CONFIG_VIDEO_V4L2_SUBDEV_API=y
+CONFIG_USB_VIDEO_CLASS=m
+CONFIG_VIDEO_CADENCE_CSI2RX=m
+CONFIG_VIDEO_TI_J721E_CSI2RX=m
+CONFIG_VIDEO_IMX219=m
+CONFIG_DRM_CDNS_MHDP8546=y
+CONFIG_DRM_TIDSS=y
+CONFIG_HID_SENSOR_HUB=m
+CONFIG_DMABUF_HEAPS=y
+CONFIG_PHY_CADENCE_DPHY_RX=m
+/sys/class/drm/card0
+../../../../bus/platform/drivers/tidss
+/sys/class/drm/card0-DP-1
+disconnected
+/dev/dma_heap/carveout_vision_apps_shared-memories
+/dev/dma_heap/default_cma_region
+/dev/dma_heap/reserved
+/dev/dma_heap/system
+4d80800000.dsp
+running
+j7-c66_0-fw
+4d81800000.dsp
+running
+j7-c66_1-fw
+b004000.rtu
+offline
+j7-rtu0_0-fw
+b00a000.txpru
+offline
+j7-txpru0_0-fw
+b038000.pru
+offline
+j7-pru0_1-fw
+b006000.rtu
+offline
+j7-rtu0_1-fw
+b00c000.txpru
+offline
+j7-txpru0_1-fw
+b134000.pru
+offline
+j7-pru1_0-fw
+b104000.rtu
+offline
+j7-rtu1_0-fw
+b10a000.txpru
+offline
+j7-txpru1_0-fw
+b138000.pru
+offline
+j7-pru1_1-fw
+b106000.rtu
+offline
+j7-rtu1_1-fw
+64800000.dsp
+running
+j7-c71_0-fw
+b10c000.txpru
+offline
+j7-txpru1_1-fw
+41000000.r5f
+attached
+unknown
+5c00000.r5f
+running
+j7-main-r5f0_0-fw
+5d00000.r5f
+running
+j7-main-r5f0_1-fw
+5e00000.r5f
+offline
+j7-main-r5f1_0-fw
+5f00000.r5f
+offline
+j7-main-r5f1_1-fw
+b034000.pru
+offline
+j7-pru0_0-fw
+/sys/bus/platform/devices/4a00000.dss
+../../../../bus/platform/drivers/tidss
+/sys/bus/platform/devices/a000000.dp-bridge
+../../../../bus/platform/drivers/cdns-mhdp8546
+/sys/firmware/devicetree/base/bus@100000/ticsi2rx@4510000
+disabled
+/sys/firmware/devicetree/base/bus@100000/dss@4a00000
+status absent
+/sys/firmware/devicetree/base/bus@100000/dp-bridge@a000000
+status absent
+/sys/firmware/devicetree/base/bus@100000/phy@4580000
+disabled
+/sys/firmware/devicetree/base/bus@100000/phy@4590000
+disabled
+/sys/firmware/devicetree/base/bus@100000/ticsi2rx@4500000
+disabled
+567e257b39a2a6082c8a2394a3e49dea33b5add790449accae6d225f6bb5d695  /lib/firmware/j7-main-r5f0_0-fw
+/boot/firmware/overlays/k3-am62x-sk-csi2-imx219.dtbo
+/boot/firmware/overlays/k3-j721e-sk-csi2-dual-imx219.dtbo
+/boot/firmware/overlays/k3-j722s-evm-csi2-quad-rpi-cam-imx219.dtbo
+gstreamer1.0-alsa	
+gstreamer1.0-audiosink	
+gstreamer1.0-audiosource	
+gstreamer1.0-gl:arm64	1.26.2-1+deb13u2
+gstreamer1.0-libav:arm64	1.26.2-1+deb13u1
+gstreamer1.0-plugins-bad:arm64	1.26.2-3+deb13u3
+gstreamer1.0-plugins-bad-faad	
+gstreamer1.0-plugins-bad-videoparsers	
+gstreamer1.0-plugins-base:arm64	1.26.2-1+deb13u2
+gstreamer1.0-plugins-good:arm64	1.26.2-1+deb13u2
+gstreamer1.0-plugins-ugly	
+gstreamer1.0-pulseaudio	
+gstreamer1.0-tools	
+gstreamer1.0-videosink	
+gstreamer1.0-videosource	
+gstreamer1.0-visualization	
+gstreamer1.0-x:arm64	1.26.2-1+deb13u2
+libgstreamer-gl1.0-0:arm64	1.26.2-1+deb13u2
+libgstreamer-plugins-bad1.0-0:arm64	1.26.2-3+deb13u3
+libgstreamer-plugins-base1.0-0:arm64	1.26.2-1+deb13u2
+libgstreamer1.0-0:arm64	1.26.2-2
+libgtk-4-media-gstreamer	4.18.6+ds-2
+totem-gstreamer	
+/:  Bus 001.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/1p, 480M
+    |__ Port 001: Dev 002, If 0, Class=Hub, Driver=hub/4p, 480M
+/:  Bus 002.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/1p, 5000M
+    |__ Port 001: Dev 002, If 0, Class=Hub, Driver=hub/4p, 5000M
+
+--- Supplemental inventory ---
+/lib/modules/6.18.39-arm64-k3-r47-tidl3/kernel/drivers/media/platform/cadence/cdns-csi2rx.ko.xz
+/lib/modules/6.18.39-arm64-k3-r47-tidl3/kernel/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.ko.xz
+/lib/modules/6.18.39-arm64-k3-r47-tidl3/kernel/drivers/media/i2c/imx219.ko.xz
+/lib/modules/6.18.39-arm64-k3-r47-tidl3/kernel/drivers/media/usb/uvc/uvcvideo.ko.xz
+/lib/modules/6.18.39-arm64-k3-r47-tidl3/kernel/drivers/phy/cadence/cdns-dphy-rx.ko.xz
+/usr/lib/aarch64-linux-gnu/gstreamer-1.0/libgstvideo4linux2.so
+/usr/lib/aarch64-linux-gnu/gstreamer-1.0/libgstapp.so
+/usr/lib/aarch64-linux-gnu/gstreamer-1.0/libgstkms.so
+/opt/source/dtb-7.2.x/Bindings/display/bridge/cdns,mhdp8546.yaml
+/home/debian/bbai64-porting/staging/lib/libtivision_apps.so.11.2.0
+/home/debian/bbai64-porting/staging/lib/libtivision_apps.so
+/dev/dma_heap:
+total 0
+crw------- 1 root root 250, 0 Nov 24 08:05 carveout_vision_apps_shared-memories
+crw------- 1 root root 250, 2 Nov 24 08:05 default_cma_region
+crw------- 1 root root 250, 3 Nov 24 08:05 reserved
+crw------- 1 root root 250, 1 Nov 24 08:05 system
+
+/dev/dri:
+total 0
+drwxr-xr-x 2 root root      60 Nov 24 08:05 by-path
+crw-rw---- 1 root video 226, 0 Nov 24 08:05 card0
+/usr/bin/v4l2-ctl
+2-1 0451 8140 5000
+usb1 1d6b 0002 480
+1-1 0451 8142 480
+usb2 1d6b 0003 5000
+Nov 24 08:05:44 BeagleBone kernel: cdns-mhdp8546 a000000.dp-bridge: error -EINVAL: invalid resource (null)
+Nov 24 08:05:44 BeagleBone kernel: cdns-mhdp8546 a000000.dp-bridge: Failed to get SAPB memory resource, HDCP not supported
+Nov 24 08:05:44 BeagleBone kernel: tidss 4a00000.dss: [drm] Registered 1 planes with drm panic
+Nov 24 08:05:44 BeagleBone kernel: [drm] Initialized tidss 1.0.0 for 4a00000.dss on minor 0
+Nov 24 08:05:44 BeagleBone kernel: tidss 4a00000.dss: [drm] Cannot find any crtc or sizes
+
+--- No-hardware preflight ---
+2026-11-25T05:20:55+00:00
+debian adm kmem dialout cdrom floppy audio dip video plugdev users netdev i2c bluetooth docker weston-launch tisdk admin gpio render input systemd-journal
+CONFIG_EXTRA_FIRMWARE="regulatory.db regulatory.db.p7s cadence/mhdp8546.bin"
+CONFIG_USB_VIDEO_CLASS=m
+CONFIG_HID_SENSOR_HUB=m
+CONFIG_IIO=m
+CONFIG_HID_SENSOR_ACCEL_3D=m
+CONFIG_HID_SENSOR_GYRO_3D=m
+/usr/bin/v4l2-ctl
+/usr/bin/media-ctl
+/usr/bin/python3
+v4l2-ctl 1.30.1
+/:  Bus 001.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/1p, 480M
+    |__ Port 001: Dev 002, If 0, Class=Hub, Driver=hub/4p, 480M
+/:  Bus 002.Port 001: Dev 001, Class=root_hub, Driver=xhci-hcd/1p, 5000M
+    |__ Port 001: Dev 002, If 0, Class=Hub, Driver=hub/4p, 5000M
+ii  libusb-1.0-0 2:1.0.28-1
+ii  v4l-utils 1.30.1-1
+1afcda867647d8ed4d1497739ce1eb1cd6f0fceb27b682e31e4f585c96741231  /home/debian/bbai64-porting/staging/lib/libtivision_apps.so.11.2.0
+
+--- Offline SK overlay compatibility ---
+f155f7fb6f65a8f4ebc49a944e4b248a864ed359df4bd8ffdb4ffa4b426f6c1b  bbai64-porting/staging/dt/k3-j721e-bbai64-tidl-candidate.dtb
+3db8d9d590025977aa066421087966852460ddff3838518f3b4dab0c2a3e4cf9  k3-j721e-sk-csi2-dual-imx219.dtbo
+vdd_sd_dv missing
+csi_mux missing
+cam0_i2c missing
+cam1_i2c missing
+cdns_csi2rx0 present
+dphy0 present
+ti_csi2rx0 present
+cdns_csi2rx1 present
+dphy1 present
+ti_csi2rx1 present
+
+Failed to apply '/tmp/tmp.6eLBg5vxRL/sk.dtbo': FDT_ERR_NOTFOUND
+fdtoverlay exit=1
+
+--- Local SDK archive inspection ---
+# SDK tar member basename, bytes, SHA256
+imx219_1920x1080_capture.raw 2073600 422dd18801dc07918a8befcc72437d6d32f41c501b0e16a8b99eecd783caba47
+dcc_2a_10b_1920x1080.bin 22951 0b4c25f7155a2406d5a5ae7e387f79a77b614e7e31898a55f0cdba8ada55477b
+dcc_2a_1920x1080.bin 22951 0b4c25f7155a2406d5a5ae7e387f79a77b614e7e31898a55f0cdba8ada55477b
+dcc_viss_10b_1920x1080.bin 19489 bbe7b5c1038fd8ff6fa7e7b67eb91b300490ade0d64840110410ede27c772c60
+dcc_viss_1920x1080.bin 17293 b44fac6c79448ebad2f84e23a9333444634e1b0cebf5c1a16c7440e1b8acd68a
+# Local staged libtivision_apps.so.11.2.0, SHA256
+1afcda867647d8ed4d1497739ce1eb1cd6f0fceb27b682e31e4f585c96741231

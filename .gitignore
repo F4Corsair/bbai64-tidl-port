@@ -80,3 +80,18 @@
 # Python ORT experiment reports
 !/bbai64-porting/python-ort-validation/
 !/bbai64-porting/python-ort-validation/*.md
+
+# Camera and display documentation and reproducible inputs
+!/camera-display/
+!/camera-display/*.md
+!/camera-display/board-assessment/
+!/camera-display/board-assessment/*.md
+!/camera-display/board-assessment/board-inventory.txt
+!/camera-display/d435i-rgb/
+!/camera-display/d435i-rgb/*.md
+!/camera-display/d435i-rgb/*.sh
+!/camera-display/d435i-rgb/d435i-rgb.log
+!/camera-display/vxe-port/
+!/camera-display/vxe-port/*.dtso
+!/camera-display/vxe-port/*.sh
+!/camera-display/vxe-port/*.md

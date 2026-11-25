@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0-only OR MIT
+/dts-v1/;
+/plugin/;
+
+&{/bus@100000} {
+	video-encoder@4200000 {
+		compatible = "img,vxe384";
+		reg = <0x0 0x04200000 0x0 0x00100000>;
+		/* GIC_SPI, IRQ 181, IRQ_TYPE_LEVEL_HIGH */
+		interrupts = <0 181 4>;
+		/* J721E device 153, TI_SCI_PD_EXCLUSIVE */
+		power-domains = <&k3_pds 153 1>;
+	};
+};
